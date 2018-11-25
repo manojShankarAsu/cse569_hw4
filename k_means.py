@@ -119,8 +119,23 @@ def k_means(k):
 	plt.legend(loc='upper left')
 	curr_d = os.getcwd()
 	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_2/k_2/graph_{0}.png'.format(random.randint(0,100)))
-	plt.savefig(graph_d)
+	#plt.savefig(graph_d)
 	#plt.show()
+	print 'Mean vectors'
+	for i in xrange(k):
+		print clusters[i].centroid_x, clusters[i].centroid_y
+		print '--'
+	print 'Covariance matrices'
+	for i in xrange(k):
+		x_temp = []
+		y_temp = []
+		for idx in clusters[i].points:
+			x_temp.append(x[idx])
+			y_temp.append(y[idx])
+		print np.cov(x_temp,y_temp)
+		print '---'
+
+
 
 def k_means_r(r,k):
 	for i in xrange(r):
@@ -134,8 +149,8 @@ def main():
 			x_y = line.split(' ')
 			x.append(float(x_y[0]))
 			y.append(float(x_y[1]))
-	k = 2
-	r = 5 
+	k = 3
+	r = 1 
 	k_means_r(r,k)
 
 

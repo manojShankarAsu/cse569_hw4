@@ -35,6 +35,46 @@ class GMM(object):
 				self.priors[i] = float(1/self.K)
 				random_point = random.randint(0,self.N-1)
 				self.MU[:,i] = self.X[random_point].T
+		elif init_option == 2:
+			for i in xrange(self.K):
+					self.priors[i] = float(1/self.K)
+			if self.K == 2:
+				self.MU = np.array([[3.0269399725,0.04039995125],[-0.12112793375,-0.04725860125]]).T
+				self.Sigma = np.zeros((K,self.D,self.D))
+				self.Sigma[0] = np.array([[0.78454199,0.01197598],[0.01197598,0.95989469]])
+				self.Sigma[1] = np.array([[0.81922146,-0.00963075],[-0.00963075,0.96540313]])
+			elif self.K == 3:
+				self.MU = np.array([[-1.17925694828,1.23781304023],[-0.169391248038,-0.396167298273],[1.79224925399,0.175532635704]]).T
+				self.Sigma = np.zeros((K,self.D,self.D))
+				self.Sigma[0] = np.array([[0.38409962,-0.25538808],[-0.25538808,0.33538165]])
+				self.Sigma[1] = np.array([[0.51268655,0.23746005],[0.23746005,0.45334124]])
+				self.Sigma[2] = np.array([[0.22008666,-0.05003686],[-0.05003686,1.27600262]])
+
+
+			#K means mean vectors and covariance matrices
+			# k = 2
+			# dataset 1 
+			# m1 - [3.0269399725,0.04039995125]
+			# m2 - [-0.12112793375 -0.04725860125]
+			# c1 - [[0.78454199 0.01197598]
+ 			#		[0.01197598 0.95989469]]
+ 			# c2 - [[ 0.81922146 -0.00963075]
+ 			#      [-0.00963075  0.96540313]]
+ 			#
+ 			# k =3 
+ 			#m1 = [-0.52175498762 0.0382393810179]
+ 			#m2 = [1.72186328191 1.04772567021]
+ 			# m3 - [1.64650398992 -0.850836261965]
+ 			#
+ 			# c1 = [[ 0.55007501 -0.04858143]
+ 			#	[-0.04858143  0.86404997]]
+ 			#
+ 			#c2 - [[0.28104922 0.03141673]
+ 				#[0.03141673 0.37528025]]
+ 			#
+ 			# c3 - [[ 0.31232164 -0.01573548]
+ 			#  [-0.01573548  0.36061645]]
+
 
 	def model(self):
 		# k means initialization - option 2
@@ -84,9 +124,9 @@ class GMM(object):
 		plt.scatter(iterations, log_likes, c='blue', edgecolor='black')
 		plt.xlabel('Iterations')
 		plt.ylabel('Log Likelihood')
-		plt.title("Iterations vs Log likelihood of Dataset 2: Random initialization of Mean vector")
+		plt.title("Iterations vs Log likelihood of Dataset 2: K means initialization")
 		data_dir = os.getcwd()
-		pa = os.path.join(data_dir,'Dataset2/itervslog.png')
+		pa = os.path.join(data_dir,'Dataset2_k/itervslog.png')
 		plt.savefig(pa)
 		#plt.show()
 		return self.Q
@@ -105,7 +145,7 @@ class GMM(object):
 		return sum
 
 
-def vis_data_shade(X, Q,K):
+def plot_clusters(X, Q,K):
 	# Use specific RGB values instead of discrete char identifiers if num_classes > 8
 	char_colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 	rgb_colors = []
@@ -121,11 +161,11 @@ def vis_data_shade(X, Q,K):
 			colorings[n,2] += Q[n,k]*rgb_colors[k*3+2]
 	plt.clf()
 	plt.scatter(X[:,0], X[:,1], c=colorings, edgecolor='black')
-	plt.title("Gaussian Clustering Dataset 2: Random initialization of Mean vector")
+	plt.title("Gaussian Clustering Dataset 2: K means initialization")
 	plt.xlabel('X')
 	plt.ylabel('Y')
 	data_dir = os.getcwd()
-	pa = os.path.join(data_dir,'Dataset2/gmm.png')
+	pa = os.path.join(data_dir,'Dataset2_k/gmm.png')
 	plt.savefig(pa)
 	#plt.show()
 
@@ -136,9 +176,9 @@ def main():
 	data.columns = ['X','Y','empty']
 	points = data[['X','Y']]
 	k = 3
-	gmm = GMM(points,k,1)
+	gmm = GMM(points,k,2)
 	Q = gmm.model()
-	vis_data_shade(points.values,Q,k)
+	plot_clusters(points.values,Q,k)
 
 
 if __name__ == '__main__':
