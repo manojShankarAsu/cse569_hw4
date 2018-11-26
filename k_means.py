@@ -44,7 +44,7 @@ class Cluster(object):
 		self.centroid_y = y_sum / len(self.points)
 
 
-def k_means(k):
+def k_means(k,rr):
 	centroids = set()
 	clusters = []
 	n = len(x)
@@ -108,20 +108,22 @@ def k_means(k):
 		iterations.append(i)
 		sses.append(total_sse / n)
 
+	plt.clf()
 	plt.scatter(iterations,sses,c='blue')
 	plt.xlabel('Iterations')
 	plt.ylabel('SSE')
-	plt.title('Iterations vs SSE Dataset:1 ')
+	plt.title('Iterations vs SSE Dataset:2 ')
 	curr_d = os.getcwd()
-	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_1/k_2/graph_{0}.png'.format(random.randint(0,1000)))
+	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_2/k_3/graph_{0}.png'.format(rr))
 	plt.savefig(graph_d)
 	#plt.show()
-	plt.clf()
+	
 	total_sse = 0.0
 	for j in xrange(k):
 		total_sse += clusters[j].sum_sq_error()
 	total_sse /= n
 
+	plt.clf()
 	fig = plt.figure(figsize=(18,9))
 	tit = 'K Means Clustering K={0}  SSE={1}'.format(k,total_sse)
 	fig.suptitle(tit, fontsize=15)
@@ -138,25 +140,25 @@ def k_means(k):
 	plt.ylabel('Y')
 	plt.legend(loc='upper left')
 	curr_d = os.getcwd()
-	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_1/k_2/graph_{0}.png'.format(random.randint(0,1000)))
+	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_2/k_3/graphcl_{0}.png'.format(rr))
 	plt.savefig(graph_d)
 	#plt.show()
 
 def k_means_r(k,r):
 	for i in xrange(r):
-		k_means(k)
+		k_means(k,i)
 
 def main():
 	curr_d = os.getcwd()
-	data = os.path.join(curr_d,'Dataset_1.txt')
+	data = os.path.join(curr_d,'Dataset_3.txt')
 	with open(data) as fp:
 		for line in fp:
 			x_y = line.split(' ')
 			x.append(float(x_y[0]))
 			y.append(float(x_y[1]))
-	k = 2
+	k = 3
 	r = 5
-	k_means(k)
+	k_means_r(k,r)
 
 
 
