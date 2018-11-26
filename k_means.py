@@ -44,7 +44,7 @@ class Cluster(object):
 		self.centroid_y = y_sum / len(self.points)
 
 
-def k_means(k):
+def k_means(k,rr):
 	centroids = set()
 	clusters = []
 	n = len(x)
@@ -70,13 +70,10 @@ def k_means(k):
 		clusters[min_dist_cluster].add_point(idx)
 
 	
-	iterations = []
-	sses = []
-	i = 0
+	
 	centroids_changed = True
 	while centroids_changed:
 		centroids_changed = False
-		i += 1
 		for j in xrange(k):
 			clusters[j].recalculate_centroid()
 
@@ -100,28 +97,14 @@ def k_means(k):
 				clusters[min_dist_cluster].add_point(idx)
 				centroids_changed = True
 
-		# sse
-		total_sse = 0.0
-		for j in xrange(k):
-			total_sse += clusters[j].sum_sq_error()
-
-		iterations.append(i)
-		sses.append(total_sse / n)
-
-	plt.scatter(iterations,sses,c='blue')
-	plt.xlabel('Iterations')
-	plt.ylabel('SSE')
-	plt.title('Iterations vs SSE Dataset:1 ')
-	curr_d = os.getcwd()
-	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_1/k_2/graph_{0}.png'.format(random.randint(0,1000)))
-	plt.savefig(graph_d)
 	#plt.show()
-	plt.clf()
+	
 	total_sse = 0.0
 	for j in xrange(k):
 		total_sse += clusters[j].sum_sq_error()
 	total_sse /= n
 
+	plt.clf()
 	fig = plt.figure(figsize=(18,9))
 	tit = 'K Means Clustering K={0}  SSE={1}'.format(k,total_sse)
 	fig.suptitle(tit, fontsize=15)
@@ -138,13 +121,27 @@ def k_means(k):
 	plt.ylabel('Y')
 	plt.legend(loc='upper left')
 	curr_d = os.getcwd()
+	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_1/k_2/graph_{0}.png'.format(rr))
+	plt.savefig(graph_d)
+	#plt.show()
+	return total_sse
+
+def k_means_r(k,r):
+	iterations = []
+	sses = []
+	for i in xrange(1,r+1):
+		sse = k_means(k,i)
+		iterations.append(i)
+		sses.append(sse)
+	plt.clf()
+	plt.scatter(iterations,sses,c='blue')
+	plt.xlabel('r')
+	plt.ylabel('SSE')
+	plt.title('r vs SSE Dataset:1 ')
+	curr_d = os.getcwd()
 	graph_d = os.path.join(curr_d,'k_means_graph/Dataset_1/k_2/graph_{0}.png'.format(random.randint(0,1000)))
 	plt.savefig(graph_d)
 	#plt.show()
-
-def k_means_r(k,r):
-	for i in xrange(r):
-		k_means(k)
 
 def main():
 	curr_d = os.getcwd()
@@ -156,17 +153,7 @@ def main():
 			y.append(float(x_y[1]))
 	k = 2
 	r = 5
-	k_means(k)
-
-
-
-
-
-
-
-
-
-
+	k_means_r(k,r)
 
 
 
